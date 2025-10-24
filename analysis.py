@@ -83,3 +83,11 @@ lr=LogisticRegression()
 lr.fit(x_train,y_train)
 
 print(lr.score(x_test,y_test))
+
+print(precision_score(y_test,lr.predict(x_test),average="macro"))
+print(recall_score(y_test,lr.predict(x_test),average="macro"))
+print(f1_score(y_test,lr.predict(x_test),average="macro"))
+
+s=confusion_matrix(y_test,lr.predict(x_test))
+sns.heatmap(data=s,annot=True)
+plt.show()
