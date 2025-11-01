@@ -67,3 +67,12 @@ mnb=MultinomialNB()
 mnb.fit(x_train,y_train)
 
 print(mnb.score(x_test,y_test))
+print(mnb.score(x_train,y_train))
+print(precision_score(y_test,mnb.predict(x_test),average="macro"))
+print(recall_score(y_test,mnb.predict(x_test),average="macro"))
+print(f1_score(y_test,mnb.predict(x_test),average="macro"))
+
+score=confusion_matrix(y_test,mnb.predict(x_test))
+
+sns.heatmap(data=score,annot=True)
+plt.show()
