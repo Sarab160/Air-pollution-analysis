@@ -2,7 +2,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import OneHotEncoder,LabelEncoder,OrdinalEncoder
-from sklearn.model_selection import train_test_split,GridSearchCV
+from sklearn.model_selection import train_test_split,GridSearchCV,RandomizedSearchCV
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import precision_score,recall_score,f1_score,confusion_matrix
 
@@ -78,6 +78,24 @@ s=confusion_matrix(y_test,knc.predict(x_test))
 sns.heatmap(data=s,annot=True)
 plt.show()
 
+# param_grid = {
+#     'n_neighbors': [1, 3, 5, 7, 9, 11, 13, 15],
+#     'weights': ['uniform', 'distance'],
+#     'algorithm': ['auto', 'ball_tree', 'kd_tree', 'brute'],
+#     'leaf_size': [10, 20, 30, 40, 50],
+#     'metric': ['minkowski', 'euclidean', 'manhattan'],
+#     'p': [1, 2]
+# }
+
+# # gd=GridSearchCV(KNeighborsClassifier(),param_grid=param_grid)
+# # gd.fit(x_train,y_train)
+
+# rd=RandomizedSearchCV(estimator=KNeighborsClassifier,param_distributions=param_grid,n_iter=20)
+# rd.fit(x_train,y_train)
+
+# print(rd.best_params_)
+# print(rd.best_score_)
+
 param_grid = {
     'n_neighbors': [1, 3, 5, 7, 9, 11, 13, 15],
     'weights': ['uniform', 'distance'],
@@ -87,8 +105,16 @@ param_grid = {
     'p': [1, 2]
 }
 
-gd=GridSearchCV(KNeighborsClassifier(),param_grid=param_grid)
-gd.fit(x_train,y_train)
+rd = RandomizedSearchCV(
+    estimator=KNeighborsClassifier(), 
+    param_distributions=param_grid,
+    n_iter=20,
+    cv=5,
+    scoring='accuracy',
+    random_state=42
+)
 
-print(gd.best_score_)
-print(gd.best_params_)
+rd.fit(x_train, y_train)
+
+print(rd.best_params_)
+print(rd.best_score_)
